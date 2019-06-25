@@ -6,6 +6,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import sample.entities.Entity;
 import sample.entities.Message;
+import sample.entities.MessagePane;
 import sample.entities.Player;
 import sample.entities.interfaces.Clickable;
 import sample.util.Constants;
@@ -47,7 +48,13 @@ public class GameState {
                .filter(Clickable.class::isInstance)
                .filter(entity -> entity.intersects(point))
                .map(Clickable.class::cast)
-               .forEach(Clickable::onClick);
+               .forEach(clickable -> clickable.onClick(point));
+
+        Manager.getMessages()
+               .stream()
+               .filter(MessagePane.class::isInstance)
+               .map(Clickable.class::cast)
+               .forEach(clickable -> clickable.onClick(point));
 
         EventHandler.removeClick(point);
     }
@@ -83,6 +90,7 @@ public class GameState {
     private static boolean hasCollision(Player player) {
         return Manager.getEntities()
                       .stream()
+                      .filter(Entity::collides)
                       .filter(entity -> entity != player)
                       .anyMatch(player::intersects);
     }
@@ -135,6 +143,7 @@ public class GameState {
         }
 
         Manager.removeEntities();
+        Manager.removeMessages();
     }
 
     private static void updatePlayer() {

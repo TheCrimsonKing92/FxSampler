@@ -29,6 +29,7 @@ public class Manager {
 
     private static ConcurrentHashMap<String, Message> messageMap = new ConcurrentHashMap<>();
     private static Vector<Message> messages = new Vector<>();
+    private static Vector<Message> messagesToRemove = new Vector<>();
 
     static {
         add(player);
@@ -78,7 +79,11 @@ public class Manager {
 
     public static Image getImage(String file) { return ImageLoader.getImage(file); }
 
-    public static Vector<Message> getMessages() { return messages; }
+    public static List<Message> getMessages() {
+        return messages.stream()
+                       .filter(message -> !messagesToRemove.contains(message))
+                       .collect(Collectors.toList());
+    }
 
     public static Player getPlayer() { return player; }
 
@@ -102,19 +107,33 @@ public class Manager {
         entities.removeIf(next -> next == entity);
     }
 
+    public static void remove(Message message) {
+        if (message == null) {
+            return;
+        }
+
+        markForRemoval(message);
+
+        messages.removeIf(next -> next == message);
+    }
+
     public static void remove(String message) {
         if (!messageMap.containsKey(message)) {
             return;
         }
 
         Message toRemove = messageMap.get(message);
-        messages.remove(toRemove);
-        messageMap.remove(message);
+        remove(toRemove);
     }
 
     public static void removeEntities() {
         entities.removeAll(entitiesToRemove);
         entitiesToRemove.clear();
+    }
+
+    public static void removeMessages() {
+        messages.removeAll(messagesToRemove);
+        messagesToRemove.clear();
     }
 
     private static void init() {
@@ -132,5 +151,9 @@ public class Manager {
 
     private static void markForRemoval(Entity entity) {
         entitiesToRemove.add(entity);
+    }
+
+    private static void markForRemoval(Message message) {
+        messagesToRemove.add(message);
     }
 }

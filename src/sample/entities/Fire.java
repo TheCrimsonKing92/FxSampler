@@ -2,6 +2,8 @@ package sample.entities;
 
 import javafx.scene.control.ChoiceDialog;
 import javafx.scene.image.Image;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import sample.Manager;
 import sample.entities.interfaces.Clickable;
 import sample.util.Point;
@@ -39,10 +41,9 @@ public class Fire extends TickableSprite implements Clickable {
     }
 
     @Override
-    public void onClick() {
+    public void onClick(Point point) {
         if (messageReference == null) {
             placeMessage();
-            placeDialog();
         } else {
             removeMessage();
         }
@@ -92,27 +93,11 @@ public class Fire extends TickableSprite implements Clickable {
         health = health + 1;
     }
 
-    private void placeDialog() {
-        Point toPlace = getLocation().plusX(getWidth() + 5).plusY(30);
-        ChoiceDialog<String> dialog = new ChoiceDialog<>("Close", "Feed");
-        dialog.setHeaderText("Campfire");
-        dialog.setTitle("Title?");
-        dialog.setContentText("Choice? ");
-        dialog.setX(toPlace.getX());
-        dialog.setY(toPlace.getY());
-
-        dialogReference = dialog;
-        dialog.show();
-    }
-
     private void placeMessage() {
         Point toPlace = getLocation().plusX(getWidth() + 5).plusY(10);
         messageReference = "Current Health: " + health;
-        Manager.add(new Message(messageReference, toPlace, 24));
-    }
-
-    private void removeDialog() {
-
+        // Manager.add(new Message(messageReference, toPlace, 24));
+        Manager.add(new MessagePane(messageReference, toPlace, Font.font("Times New Roman", FontWeight.NORMAL, 16), 7));
     }
 
     private void removeMessage() {

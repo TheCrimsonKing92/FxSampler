@@ -1,6 +1,11 @@
 package sample.util;
 
 public final class Constants {
+    public static final class BUTTON {
+        public static final double HEIGHT = 10.0;
+        public static final double WIDTH = 10.0;
+    }
+
     public static final class CANVAS {
         public static final double HEIGHT = 600.0;
         public static final double WIDTH = 800.0;

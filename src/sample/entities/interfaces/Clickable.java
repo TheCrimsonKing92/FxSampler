@@ -1,5 +1,7 @@
 package sample.entities.interfaces;
 
-public interface Clickable {
-    void onClick();
+import sample.util.Point;
+
+public interface Clickable extends Locateable {
+    void onClick(Point point);
 }

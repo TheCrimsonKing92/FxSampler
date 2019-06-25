@@ -43,7 +43,7 @@ public class Message implements DrawableText {
 
     @Override
     public void draw(GraphicsContext gc) {
-        gc.setFont(font);
+        gc.setFont(getFont());
         fill(gc);
         stroke(gc);
     }
@@ -56,6 +56,8 @@ public class Message implements DrawableText {
             gc.fillText(text, location.getX(), location.getY());
         }
     }
+
+    protected Font getFont() { return font; }
 
     @Override
     public Point getLocation() { return location; }

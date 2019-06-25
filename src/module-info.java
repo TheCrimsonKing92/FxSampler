@@ -5,5 +5,6 @@ module FxSampler {
 
     exports sample;
     exports sample.entities;
+    exports sample.entities.interfaces;
     exports sample.util;
 }
