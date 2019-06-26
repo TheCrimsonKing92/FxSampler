@@ -79,6 +79,8 @@ public class Manager {
 
     public static Image getImage(String file) { return ImageLoader.getImage(file); }
 
+    public static Image getImage(String file, String extension) { return ImageLoader.getImage(file, extension); }
+
     public static List<Message> getMessages() {
         return messages.stream()
                        .filter(message -> !messagesToRemove.contains(message))

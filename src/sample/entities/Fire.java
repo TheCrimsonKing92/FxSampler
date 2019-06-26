@@ -21,7 +21,7 @@ public class Fire extends TickableSprite implements Clickable {
     private int waneMax = 10;
 
     static {
-        fire = Manager.getImage("Fire1.png");
+        fire = Manager.getImage("Fire1");
     }
 
     public Fire() {
@@ -96,8 +96,8 @@ public class Fire extends TickableSprite implements Clickable {
     private void placeMessage() {
         Point toPlace = getLocation().plusX(getWidth() + 5).plusY(10);
         messageReference = "Current Health: " + health;
-        // Manager.add(new Message(messageReference, toPlace, 24));
-        Manager.add(new MessagePane(messageReference, toPlace, Font.font("Times New Roman", FontWeight.NORMAL, 16), 7));
+        // Manager.add(new MessagePane(messageReference, toPlace, Font.font("Times New Roman", FontWeight.NORMAL, 16), 7));
+        Manager.add(new MessagePane(messageReference, toPlace, Font.font("Times New Roman", FontWeight.NORMAL, 12), 0));
     }
 
     private void removeMessage() {

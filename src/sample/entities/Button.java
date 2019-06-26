@@ -11,6 +11,5 @@ public class Button extends Entity {
 
     @Override
     public void draw(GraphicsContext gc) {
-
     }
 }

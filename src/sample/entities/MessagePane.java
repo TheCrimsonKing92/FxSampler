@@ -13,6 +13,7 @@ import sample.util.Point;
 
 public class MessagePane extends Message implements Clickable {
     private int borderOffset = 10;
+    private boolean drawButton = false;
 
     public MessagePane(String text, Point point) {
         super(text, point);
@@ -20,6 +21,11 @@ public class MessagePane extends Message implements Clickable {
 
     public MessagePane(String text, Point point, Font font) {
         super(text, point, font);
+    }
+
+    public MessagePane(String text, Point point, Font font, boolean drawButton) {
+        super(text, point, font);
+        this.drawButton = drawButton;
     }
 
     public MessagePane(String text, Point point, Font font, int offset) {
@@ -39,7 +45,9 @@ public class MessagePane extends Message implements Clickable {
     public void draw(GraphicsContext gc) {
         super.draw(gc);
         drawBorder(gc);
-        drawButton(gc);
+        if (drawButton) {
+            drawButton(gc);
+        }
     }
 
     @Override

@@ -11,16 +11,19 @@ public class ImageLoader {
     private ImageLoader(){}
 
     public static Image getImage(String fileName) {
-        if (images.containsKey(fileName)) {
-            return images.get(fileName);
+        return getImage(fileName, "png");
+    }
+
+    public static Image getImage(String fileName, String extension) {
+        String search = fileName + "." + extension;
+        if (images.containsKey(search)) {
+            return images.get(search);
         }
 
-        Image toLoad = new Image(getResource(fileName));
-        images.put(fileName, toLoad);
+        Image toLoad = new Image(getResource(search));
+        images.put(search, toLoad);
         return toLoad;
     }
 
-    private static String getResource(String fileName) {
-        return ImageLoader.class.getResource(fileName).toString();
-    }
+    private static String getResource(String fileName) { return ImageLoader.class.getResource(fileName).toString(); }
 }

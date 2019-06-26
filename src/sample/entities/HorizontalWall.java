@@ -13,11 +13,11 @@ public class HorizontalWall extends Sprite {
     private static Image wall;
 
     static {
-        wall = Manager.getImage("HorizontalWall.png");
+        wall = Manager.getImage("HorizontalWall");
     }
 
     public static List<HorizontalWall> Walls(double x, double y, int walls) {
-        return Walls(x, y, walls, 0);
+        return Walls(x, y, walls, -1);
     }
 
     public static List<HorizontalWall> Walls(double x, double y, int walls, int xOffset) {

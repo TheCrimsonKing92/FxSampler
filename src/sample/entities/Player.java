@@ -9,7 +9,7 @@ public class Player extends Sprite {
     private static Image solemnMan;
 
     static {
-        solemnMan = Manager.getImage("SolemnMan.png");
+        solemnMan = Manager.getImage("SolemnMan");
     }
 
     public Player() {
