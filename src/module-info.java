@@ -4,6 +4,7 @@ module FxSampler {
     requires javafx.fxml;
 
     exports sample;
+    exports sample.contexts;
     exports sample.entities;
     exports sample.entities.interfaces;
     exports sample.util;

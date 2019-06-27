@@ -9,7 +9,7 @@ public class HorizontalBoundary extends Boundary {
 
     @Override
     protected Point calculateEnd(Point location, double height, double width) {
-        return location.plusX(width);
+        return location.plusX(width).plusY(height);
     }
 
     @Override

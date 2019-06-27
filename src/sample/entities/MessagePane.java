@@ -2,11 +2,9 @@ package sample.entities;
 
 import javafx.geometry.Bounds;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.util.Pair;
-import sample.Manager;
 import sample.entities.interfaces.Clickable;
 import sample.util.Constants;
 import sample.util.Point;
@@ -19,10 +17,6 @@ public class MessagePane extends Message implements Clickable {
         super(text, point);
     }
 
-    public MessagePane(String text, Point point, Font font) {
-        super(text, point, font);
-    }
-
     public MessagePane(String text, Point point, Font font, boolean drawButton) {
         super(text, point, font);
         this.drawButton = drawButton;
@@ -33,16 +27,14 @@ public class MessagePane extends Message implements Clickable {
         borderOffset = offset;
     }
 
-    public MessagePane(String text, Point point, Color fill, Color stroke) {
-        super(text, point, fill, stroke);
-    }
-
-    public MessagePane(String text, Point point, Color fill, Color stroke, Font font) {
-        super(text, point, fill, stroke, font);
+    public MessagePane(String text, Point point, Font font, boolean drawButton, int offset) {
+        this(text, point, font, drawButton);
+        borderOffset = offset;
     }
 
     @Override
     public void draw(GraphicsContext gc) {
+        clear(gc);
         super.draw(gc);
         drawBorder(gc);
         if (drawButton) {
@@ -63,6 +55,12 @@ public class MessagePane extends Message implements Clickable {
                location.getY() < point.getY() &&
                (location.getX() + Constants.BUTTON.WIDTH) > point.getX() &&
                (location.getY() + Constants.BUTTON.HEIGHT) > point.getY();
+    }
+
+    private void clear(GraphicsContext gc) {
+        Pair<Double, Double> dimensions = getDimensions();
+        Point start = getBorderStart();
+        gc.strokeRect(start.getX(), start.getY(), dimensions.getValue(), dimensions.getKey());
     }
 
     private void drawBorder(GraphicsContext gc) {

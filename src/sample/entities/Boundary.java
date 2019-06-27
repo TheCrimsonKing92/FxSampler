@@ -3,7 +3,6 @@ package sample.entities;
 import javafx.scene.Group;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.shape.Line;
-import sample.Manager;
 import sample.util.Point;
 
 public abstract class Boundary extends Entity {

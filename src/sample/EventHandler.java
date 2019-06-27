@@ -2,9 +2,12 @@ package sample;
 
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
-import sample.util.Point;
+import sample.contexts.ApplicationContext;
+import sample.contexts.GameContext;
+import sample.util.*;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class EventHandler {
@@ -26,7 +29,69 @@ public class EventHandler {
     private static Set<KeyCode> currentImmediateKeys = new HashSet<>();
     private static Set<KeyCode> currentPlayerKeys = new HashSet<>();
 
-    public static void addHandlers(Scene scene) {
+    private GameContext keyboardContext;
+    private List<ApplicationContext> mouseContexts;
+
+    public EventHandler(GameContext keyboardContext, List<ApplicationContext> mouseContexts) {
+        this.keyboardContext = keyboardContext;
+        this.mouseContexts = mouseContexts;
+    }
+
+    public void addHandlers(Scene scene) {
+        scene.setOnKeyPressed(keyEvent -> {
+            KeyCode code = keyEvent.getCode();
+
+            if (isImmediateInput(code)) {
+                GameChangedEvent gameChange;
+                switch (code) {
+                    case ENTER:
+                    case SPACE:
+                        gameChange = new GameChangedEvent(GameChangeType.PAUSE);
+                        break;
+                    case ESCAPE:
+                    default:
+                        gameChange = new GameChangedEvent(GameChangeType.MENU);
+                        break;
+                }
+                keyboardContext.handle(gameChange);
+            } else {
+                PlayerMovedEvent move;
+                switch (code) {
+                    case W:
+                    case UP:
+                        move = new PlayerMovedEvent(Direction.UP);
+                        break;
+                    case A:
+                    case LEFT:
+                        move = new PlayerMovedEvent(Direction.LEFT);
+                        break;
+                    case S:
+                    case DOWN:
+                        move = new PlayerMovedEvent(Direction.DOWN);
+                        break;
+                    case D:
+                    case RIGHT:
+                        move = new PlayerMovedEvent(Direction.RIGHT);
+                        break;
+                    default:
+                        System.out.println("Unknown player move code");
+                        move = null;
+                        break;
+                }
+                if (move == null) {
+                    return;
+                } else {
+                    keyboardContext.handle(move);
+                }
+
+            }
+        });
+        scene.setOnKeyReleased(keyEvent -> {
+
+        });
+        scene.setOnMouseClicked(mouseEvent -> {
+            System.out.println("Clicked at " + mouseEvent.getX() + ", " + mouseEvent.getY());
+        });
         scene.setOnKeyPressed(event -> {
             KeyCode code = event.getCode();
             if (isImmediateInput(code)) {

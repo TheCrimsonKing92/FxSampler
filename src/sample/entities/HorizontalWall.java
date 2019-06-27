@@ -2,7 +2,6 @@ package sample.entities;
 
 import javafx.scene.image.Image;
 import sample.util.Constants;
-import sample.Manager;
 import sample.util.Point;
 
 import java.util.List;

@@ -4,11 +4,8 @@ import javafx.scene.control.ChoiceDialog;
 import javafx.scene.image.Image;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
-import sample.Manager;
 import sample.entities.interfaces.Clickable;
 import sample.util.Point;
-
-import java.util.Optional;
 
 public class Fire extends TickableSprite implements Clickable {
     private static Image fire;

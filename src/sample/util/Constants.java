@@ -11,6 +11,18 @@ public final class Constants {
         public static final double WIDTH = 800.0;
     }
 
+    public static final class CONTEXTS {
+        public static final class GAME {
+            public static final double HEIGHT = 600.0;
+            public static final double WIDTH = 800.0;
+        }
+
+        public static final class MENU {
+            public static final double HEIGHT = 100.0;
+            public static final double WIDTH = 800.0;
+        }
+    }
+
     public static final class ENTITIES {
         public static final class PLAYER {
             public static final double HEIGHT = 10;
