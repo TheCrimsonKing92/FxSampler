@@ -4,7 +4,7 @@ public class ApplicationEvent<T> extends Event {
     private T body;
 
     public ApplicationEvent(T body) {
-        super(EventType.APPLICATION);
+        super(InternalEventType.APPLICATION);
         this.body = body;
     }
 

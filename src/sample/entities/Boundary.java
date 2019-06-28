@@ -1,8 +1,6 @@
 package sample.entities;
 
-import javafx.scene.Group;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.shape.Line;
 import sample.util.Point;
 
 public abstract class Boundary extends Entity {
@@ -16,9 +14,7 @@ public abstract class Boundary extends Entity {
     @Override
     public void draw(GraphicsContext gc) {
         gc.setLineWidth(getLineWidth());
-        Line line = new Line(getLocation().getX(), getLocation().getY(), getEnd().getX(), getEnd().getY());
-        Group root = Manager.getRoot();
-        root.getChildren().add(line);
+        gc.strokeLine(getLocation().getX(), getLocation().getY(), getEnd().getX(), getEnd().getY());
     }
 
     protected abstract Point calculateEnd(Point location, double height, double width);

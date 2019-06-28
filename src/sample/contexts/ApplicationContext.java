@@ -2,6 +2,7 @@ package sample.contexts;
 
 import javafx.scene.Node;
 import sample.util.EntityManager;
+import sample.util.Point;
 
 public abstract class ApplicationContext<T extends Node> {
     private EntityManager entityManager = new EntityManager();
@@ -27,6 +28,7 @@ public abstract class ApplicationContext<T extends Node> {
         return yOffset;
     }
 
+    public abstract void handle(Point point);
     public abstract void render();
     public abstract void update(double delta);
 }

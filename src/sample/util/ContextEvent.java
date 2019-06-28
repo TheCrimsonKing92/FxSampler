@@ -4,7 +4,7 @@ public class ContextEvent<T> extends Event {
     private T body;
 
     public ContextEvent(T body) {
-        super(EventType.CONTEXT);
+        super(InternalEventType.CONTEXT);
         this.body = body;
     }
 

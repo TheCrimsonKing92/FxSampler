@@ -19,7 +19,7 @@ public class Main extends Application {
 
         List<ApplicationContext> contexts = List.of(
                 new MenuContext(new Canvas(800, 90)),
-                new GameContext(new Canvas(800, 600))
+                new GameContext(new Canvas(800, 600), 0, 90)
         );
 
         ApplicationRunner runner = new ApplicationRunner(contexts);

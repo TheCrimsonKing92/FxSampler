@@ -1,10 +1,12 @@
 package sample.entities;
 
+import javafx.event.EventTarget;
 import javafx.geometry.Bounds;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.util.Pair;
+import sample.entities.events.RemoveMessageEvent;
 import sample.entities.interfaces.Clickable;
 import sample.util.Constants;
 import sample.util.Point;
@@ -12,23 +14,27 @@ import sample.util.Point;
 public class MessagePane extends Message implements Clickable {
     private int borderOffset = 10;
     private boolean drawButton = false;
+    private EventTarget eventTarget;
 
-    public MessagePane(String text, Point point) {
+    public MessagePane(EventTarget eventTarget, String text, Point point) {
         super(text, point);
+        this.eventTarget = eventTarget;
     }
 
-    public MessagePane(String text, Point point, Font font, boolean drawButton) {
+    public MessagePane(EventTarget eventTarget, String text, Point point, Font font, boolean drawButton) {
         super(text, point, font);
+        this.eventTarget = eventTarget;
         this.drawButton = drawButton;
     }
 
-    public MessagePane(String text, Point point, Font font, int offset) {
+    public MessagePane(EventTarget eventTarget, String text, Point point, Font font, int offset) {
         super(text, point, font);
+        this.eventTarget = eventTarget;
         borderOffset = offset;
     }
 
-    public MessagePane(String text, Point point, Font font, boolean drawButton, int offset) {
-        this(text, point, font, drawButton);
+    public MessagePane(EventTarget eventTarget, String text, Point point, Font font, boolean drawButton, int offset) {
+        this(eventTarget, text, point, font, drawButton);
         borderOffset = offset;
     }
 
@@ -45,7 +51,7 @@ public class MessagePane extends Message implements Clickable {
     @Override
     public void onClick(Point point) {
         if (buttonIntersects(point)) {
-            Manager.remove(this);
+            RemoveMessageEvent.fire(eventTarget, this);
         }
     }
 

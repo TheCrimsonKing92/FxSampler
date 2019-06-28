@@ -1,11 +1,11 @@
 package sample.util;
 
 public abstract class Event {
-    private EventType type;
+    private InternalEventType type;
 
-    public Event(EventType type) {
+    public Event(InternalEventType type) {
         this.type = type;
     }
 
-    public EventType getType()  { return type; }
+    public InternalEventType getType()  { return type; }
 }

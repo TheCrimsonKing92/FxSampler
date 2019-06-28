@@ -3,35 +3,38 @@ package sample.contexts;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import sample.entities.Entity;
 import sample.entities.Fire;
-import sample.entities.Message;
+import sample.entities.events.AddMessageEvent;
+import sample.entities.events.RemoveEntityEvent;
+import sample.entities.events.RemoveMessageEvent;
 import sample.util.*;
 import sample.entities.Player;
 
-public class GameContext extends CanvasContext {
-    private EntityManager entityManager = new EntityManager();
+public class GameContext extends EntityCanvasContext {
     private Point gameStart = Point.of(0, 100);
     private boolean paused = false;
     private Point skyStart = Point.of(0, 0);
 
     public GameContext(Canvas canvas) {
-        super(canvas);
-        entityManager.add(new Fire());
-        entityManager.add(new Player());
+        this(canvas, 0, 0);
     }
 
     public GameContext(Canvas canvas, double xOffset, double yOffset) {
         super(canvas, xOffset, yOffset);
+        canvas.addEventHandler(AddMessageEvent.MESSAGE_ADDED, event -> add(event.getMessage()));
+        canvas.addEventHandler(RemoveEntityEvent.ENTITY_REMOVED, event -> remove(event.getEntity()));
+        canvas.addEventHandler(RemoveMessageEvent.MESSAGE_REMOVED, event -> remove(event.getMessage()));
+        add(new Fire(canvas));
+        add(new Player());
     }
 
     @Override
     public void draw() {
         GraphicsContext gc = getGraphicsContext();
         drawSky(gc);
-        drawGame(gc);
+        drawGame();
 
-        entityManager.getEntities().forEach(entity -> entity.draw(gc));
+        super.draw();
     }
 
     public void handle(GameChangedEvent event) {
@@ -48,9 +51,25 @@ public class GameContext extends CanvasContext {
 
     public void handle(PlayerMovedEvent event) {
         Direction direction = event.getEvent().getBody();
+        Player player = getPlayer();
         switch (direction) {
             case UP:
-                getPlayer().moveY()
+                player.moveY();
+                break;
+            case RIGHT:
+                player.moveX();
+                break;
+            case LEFT:
+                player.reverseX();
+                break;
+            case DOWN:
+            default:
+                player.reverseY();
+                break;
+        }
+
+        if (hasCollision(player)) {
+            player.revertLast();
         }
     }
 
@@ -60,25 +79,12 @@ public class GameContext extends CanvasContext {
             return;
         }
 
-        entityManager.getEntities().stream().filter(Entity::canTick).forEach(entity -> entity.tick(delta));
-        entityManager.removeEntities();
+        super.update(delta);
     }
 
-    protected Player getPlayer() {
-        return entityManager.getPlayer();
-    }
-
-    protected boolean hasPlayer() {
-        return entityManager.hasPlayer();
-    }
-
-    private void drawEntities(GraphicsContext gc) {
-        entityManager.getEntities().forEach(entity -> entity.draw(gc));
-    }
-
-    private void drawGame(GraphicsContext gc) {
+    private void drawGame() {
         drawGameBackground();
-        drawEntities(gc);
+        drawEntities();
     }
 
     private void drawGameBackground() {

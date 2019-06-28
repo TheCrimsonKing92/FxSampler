@@ -1,6 +1,7 @@
 package sample.entities;
 
 import javafx.scene.image.Image;
+import sample.resources.ImageLoader;
 import sample.util.Constants;
 import sample.util.Point;
 
@@ -12,7 +13,7 @@ public class HorizontalWall extends Sprite {
     private static Image wall;
 
     static {
-        wall = Manager.getImage("HorizontalWall");
+        wall = ImageLoader.getImage("HorizontalWall");
     }
 
     public static List<HorizontalWall> Walls(double x, double y, int walls) {

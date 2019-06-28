@@ -1,6 +1,6 @@
 package sample.util;
 
-public enum EventType {
+public enum InternalEventType {
     APPLICATION,
     CONTEXT
 }

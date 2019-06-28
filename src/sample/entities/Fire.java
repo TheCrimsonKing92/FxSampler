@@ -1,40 +1,46 @@
 package sample.entities;
 
-import javafx.scene.control.ChoiceDialog;
+import javafx.event.EventTarget;
 import javafx.scene.image.Image;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import sample.entities.events.AddMessageEvent;
+import sample.entities.events.RemoveEntityEvent;
+import sample.entities.events.RemoveMessageEvent;
 import sample.entities.interfaces.Clickable;
+import sample.resources.ImageLoader;
 import sample.util.Point;
 
 public class Fire extends TickableSprite implements Clickable {
     private static Image fire;
-    private ChoiceDialog<String> dialogReference;
+    private EventTarget eventTarget;
     private int health = 10;
     private int maxHealth = 10;
-    private String messageReference;
+    private Message messageReference;
     private int minHealth = 1;
     private int waneBuffer = 0;
     private int waneMax = 10;
 
     static {
-        fire = Manager.getImage("Fire1");
+        fire = ImageLoader.getImage("Fire1");
     }
 
-    public Fire() {
-        this(Point.of(180, 150));
+    public Fire(EventTarget eventTarget) {
+        this(eventTarget, Point.of(180, 150));
     }
 
-    public Fire(Point location) {
-        this(fire, location, 24, 18);
+    public Fire(EventTarget eventTarget, Point location) {
+        this(eventTarget, fire, location, 24, 18);
     }
 
-    public Fire(Image image, Point location, double height, double width) {
+    public Fire(EventTarget eventTarget, Image image, Point location, double height, double width) {
         super(image, location, height, width);
+        this.eventTarget = eventTarget;
     }
 
-    public Fire(Image image, Point location, double height, double width, double xVelocity, double yVelocity) {
+    public Fire(EventTarget eventTarget, Image image, Point location, double height, double width, double xVelocity, double yVelocity) {
         super(image, location, height, width, xVelocity, yVelocity);
+        this.eventTarget = eventTarget;
     }
 
     @Override
@@ -64,26 +70,11 @@ public class Fire extends TickableSprite implements Clickable {
         if (healthChanged && messageReference != null) {
             replaceMessage();
         }
-
-        // check dialog
-        /*  
-        if (dialogReference != null) {
-            String result = dialogReference.getResult();
-            if (result != null && !result.isEmpty()) {
-                if (result.equalsIgnoreCase("Close")) {
-                    dialogReference.close();
-                    dialogReference = null;
-                } else if (result.equalsIgnoreCase("Feed")) {
-                    feed();
-                }
-            }
-        }
-        */
     }
 
     private void die() {
         removeMessage();
-        Manager.remove(this);
+        RemoveEntityEvent.fire(eventTarget, this);
     }
 
     private void feed() {
@@ -91,15 +82,16 @@ public class Fire extends TickableSprite implements Clickable {
     }
 
     private void placeMessage() {
-        Point toPlace = getLocation().plusX(getWidth() + 5).plusY(10);
-        messageReference = "Current Health: " + health;
-        // Manager.add(new MessagePane(messageReference, toPlace, Font.font("Times New Roman", FontWeight.NORMAL, 16), 7));
-        Manager.add(new MessagePane(messageReference, toPlace, Font.font("Times New Roman", FontWeight.NORMAL, 12), 0));
+        if (messageReference == null) {
+            Point toPlace = getLocation().plusX(getWidth() + 5).plusY(10);
+            messageReference = new MessagePane(eventTarget, "Current Health: " + health, toPlace, Font.font("Times New Roman", FontWeight.NORMAL, 12), true, 0);
+            AddMessageEvent.fire(eventTarget, messageReference);
+        }
     }
 
     private void removeMessage() {
         if (messageReference != null) {
-            Manager.remove(messageReference);
+            RemoveMessageEvent.fire(eventTarget, messageReference);
             messageReference = null;
         }
     }

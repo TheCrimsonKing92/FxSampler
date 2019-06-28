@@ -14,20 +14,19 @@ import sample.util.Point;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MenuContext extends CanvasContext {
-    private EntityManager entityManager = new EntityManager();
+public class MenuContext extends EntityCanvasContext {
     private List<Message> messages = new ArrayList<>();
     public MenuContext(Canvas canvas) {
         super(canvas);
-        entityManager.addAll(HorizontalWall.Walls(2, 0, 44));
-        entityManager.addAll(VerticalWall.Walls(getWidth() - 6, 0, 30));
-        entityManager.addAll(VerticalWall.Walls(1, 0, 4));
-        entityManager.addAll(HorizontalWall.Walls(1, 84, 44));
+        addAll(HorizontalWall.Walls(2, 0, 44));
+        addAll(VerticalWall.Walls(getWidth() - 6, 0, 30));
+        addAll(VerticalWall.Walls(1, 0, 4));
+        addAll(HorizontalWall.Walls(1, 84, 44));
 
         Font menuFont = Font.font("Times New Roman", FontWeight.NORMAL, 12);
-        messages.add(new MessagePane("Menu", Point.of(10, 20), menuFont, false, 2));
-        messages.add(new MessagePane("Options", Point.of(50, 20), menuFont, false, 2));
-        messages.add(new MessagePane("Help", Point.of(110, 20), menuFont, false, 2));
+        messages.add(new MessagePane(canvas, "Menu", Point.of(10, 20), menuFont, false, 2));
+        messages.add(new MessagePane(canvas, "Options", Point.of(50, 20), menuFont, false, 2));
+        messages.add(new MessagePane(canvas, "Help", Point.of(110, 20), menuFont, false, 2));
     }
 
     public MenuContext(Canvas canvas, double xOffset, double yOffset) {
@@ -37,8 +36,13 @@ public class MenuContext extends CanvasContext {
     @Override
     public void draw() {
         GraphicsContext gc = getGraphicsContext();
-        entityManager.getEntities().forEach(entity -> entity.draw(gc));
+        getEntities().forEach(entity -> entity.draw(gc));
         messages.forEach(message -> message.draw(gc));
+    }
+
+    @Override
+    public void handle(Point point) {
+
     }
 
     @Override

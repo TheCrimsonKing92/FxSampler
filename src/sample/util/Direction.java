@@ -2,7 +2,11 @@ package sample.util;
 
 public enum Direction {
     LEFT,
-    RIGHT,
+    LEFT_UP,
     UP,
-    DOWN
+    UP_RIGHT,
+    RIGHT,
+    RIGHT_DOWN,
+    DOWN,
+    DOWN_LEFT
 }

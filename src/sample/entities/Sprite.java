@@ -35,15 +35,23 @@ public abstract class Sprite extends Entity implements Moveable {
         setLocation(getLocation().plusX(diff));
     }
 
+    public void moveX() { moveX(xVelocity); }
+
     @Override
     public void moveY(double diff) {
         setLocation(getLocation().minusY(diff));
     }
 
+    public void moveY() { moveY(yVelocity); }
+
     @Override
     public void move(double x, double y) {
         setLocation(getLocation().plusX(x).minusY(y));
     }
+
+    public void reverseX() { setLocation(getLocation().minusX(xVelocity)); }
+
+    public void reverseY() { setLocation(getLocation().plusY(yVelocity));}
 
     public void revertLast() { setLocation(lastLocation); }
 
