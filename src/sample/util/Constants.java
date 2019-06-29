@@ -18,7 +18,7 @@ public final class Constants {
         }
 
         public static final class MENU {
-            public static final double HEIGHT = 100.0;
+            public static final double HEIGHT = 90.0;
             public static final double WIDTH = 800.0;
         }
     }
@@ -27,6 +27,11 @@ public final class Constants {
         public static final class PLAYER {
             public static final double HEIGHT = 10;
             public static final double WIDTH = 5;
+        }
+
+        public static final class SUN {
+            public static final double HEIGHT = 40;
+            public static final double WIDTH = 40;
         }
 
         public static final class WALLS {
@@ -44,5 +49,9 @@ public final class Constants {
 
     public static final class GAME {
         public static final String TITLE = "Solemn Adventures";
+    }
+
+    public static final class TEXT {
+        public static final String PAUSED = "PAUSED";
     }
 }

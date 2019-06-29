@@ -19,7 +19,7 @@ public class Fire extends TickableSprite implements Clickable {
     private Message messageReference;
     private int minHealth = 1;
     private int waneBuffer = 0;
-    private int waneMax = 10;
+    private int waneMax = 100;
 
     static {
         fire = ImageLoader.getImage("Fire1");

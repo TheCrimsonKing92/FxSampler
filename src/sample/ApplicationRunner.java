@@ -7,15 +7,23 @@ import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
 import sample.contexts.ApplicationContext;
 import sample.contexts.GameContext;
+import sample.util.EventHandler;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class ApplicationRunner {
     private final static long startNanoTime = System.nanoTime();
 
-    private static double currentTime;
-    private static double delta;
-    private static double previousTime;
+    private static long currentMilli = 0;
+    private static long currentNano = 0;
+    private static long deltaMilli = 0;
+    private static long previousMilli = 0;
+    private static long previousNano = 0;
+    private static long updateDelta = 0;
+    private static long updateThreshold = BigDecimal.valueOf(1000).divide(BigDecimal.valueOf(60), RoundingMode.HALF_UP).longValue();
 
     private List<ApplicationContext> applicationContexts;
     private EventHandler eventHandler;
@@ -48,7 +56,7 @@ public class ApplicationRunner {
                             .orElse(null);
     }
 
-    public static double getDelta() { return delta; }
+    public static double getUpdateDelta() { return updateDelta; }
 
     public Scene getScene() { return scene; }
 
@@ -71,13 +79,22 @@ public class ApplicationRunner {
     }
 
     private static void setCurrentTime(long newTime) {
-        previousTime = currentTime;
-        currentTime = (newTime - startNanoTime) / 1_000_000_000;
-        delta = currentTime - previousTime;
+        previousNano = currentNano;
+        currentNano = newTime;
+        previousMilli = currentMilli;
+        currentMilli = (currentNano - startNanoTime) / 1_000_000;
+        deltaMilli = currentMilli - previousMilli;
+        updateDelta = updateDelta + deltaMilli;
     }
 
     private void updateContexts() {
-        double delta = getDelta();
-        getContexts().forEach(context -> context.update(delta));
+        if (updateDelta < updateThreshold) {
+            return;
+        }
+
+        double steps = updateDelta / updateThreshold;
+
+        getContexts().forEach(context -> context.update(steps));
+        updateDelta = 0;
     }
 }

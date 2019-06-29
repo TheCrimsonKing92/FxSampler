@@ -17,12 +17,16 @@ public class Main extends Application {
         primaryStage.setTitle(Constants.GAME.TITLE);
         primaryStage.getIcons().add(ImageLoader.getImage("SolemnManIcon"));
 
-        List<ApplicationContext> contexts = List.of(
-                new MenuContext(new Canvas(800, 90)),
-                new GameContext(new Canvas(800, 600), 0, 90)
-        );
+        ApplicationRunner runner = new ApplicationRunner(List.of(
+                new MenuContext(
+                        new Canvas(Constants.CONTEXTS.MENU.WIDTH, Constants.CONTEXTS.MENU.HEIGHT)
+                ),
+                new GameContext(
+                        new Canvas(Constants.CONTEXTS.GAME.WIDTH, Constants.CONTEXTS.GAME.HEIGHT),
+                        Constants.CONTEXTS.MENU.HEIGHT
+                )
+        ));
 
-        ApplicationRunner runner = new ApplicationRunner(contexts);
         runner.start();
         primaryStage.setScene(runner.getScene());
         primaryStage.show();

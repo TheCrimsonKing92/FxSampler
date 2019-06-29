@@ -3,13 +3,48 @@ package sample.entities;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import sample.entities.interfaces.Moveable;
+import sample.util.Direction;
+import sample.util.MoveDetails;
+import sample.util.PlayerMoveEvent;
 import sample.util.Point;
 
 public abstract class Sprite extends Entity implements Moveable {
     private Image image;
     private Point lastLocation;
-    private double xVelocity = 0.00;
-    private double yVelocity = 0.00;
+    private boolean xMoving = false;
+    private boolean xPositive = true;
+    private double xVelocity = 5;
+    private boolean yMoving = false;
+    private boolean yPositive = true;
+    private double yVelocity = 5;
+
+    protected boolean isxMoving() { return xMoving; }
+    protected boolean isyMoving() { return yMoving; }
+    protected boolean isMoving() { return isxMoving() || isyMoving(); }
+
+    protected void handleMoveStart(Direction direction) {
+        if (direction == Direction.UP) {
+            yPositive = true;
+            yMoving = true;
+        } else if (direction == Direction.RIGHT) {
+            xPositive = true;
+            xMoving = true;
+        } else if (direction == Direction.DOWN) {
+            yPositive = false;
+            yMoving = true;
+        } else if (direction == Direction.LEFT) {
+            xPositive = false;
+            xMoving = true;
+        }
+    }
+
+    protected void handleMoveStop(Direction direction) {
+        if (direction == Direction.UP || direction == Direction.DOWN) {
+            yMoving = false;
+        } else if (direction == Direction.RIGHT || direction == Direction.LEFT) {
+            xMoving = false;
+        }
+    }
 
     public Sprite(Image image, Point location, double height, double width) {
         super(location, height, width);
@@ -63,19 +98,38 @@ public abstract class Sprite extends Entity implements Moveable {
         yVelocity = velocity;
     }
 
-    public void stop() {
-        xVelocity = 0.00;
-        yVelocity = 0.00;
+    public void startMove() {
+        startXMove();
+        startYMove();
     }
 
-    public void update(double steps) {
-        if (xVelocity > 0) {
-            moveX(xVelocity * steps);
-        }
+    public void startXMove() {
+        xMoving = true;
+    }
 
-        if (yVelocity >0) {
-            moveY(yVelocity * steps);
-        }
+    public void startYMove() {
+        yMoving = true;
+    }
+
+    public void stopMove() {
+        stopXMove();
+        stopYMove();
+    }
+
+    public void stopXMove() {
+        xMoving = false;
+    }
+
+    public void stopYMove() {
+        yMoving = false;
+    }
+
+    @Override
+    public void tick(double steps) {
+        double xMovement = xMoving ? (xPositive ? xVelocity : -1 * xVelocity) * steps : 0;
+        double yMovement = yMoving ? (yPositive ? yVelocity : -1 * yVelocity) * steps : 0;
+
+        move(xMovement, yMovement);
     }
 
     protected void setLocation(Point point) {

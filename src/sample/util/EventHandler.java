@@ -1,4 +1,4 @@
-package sample;
+package sample.util;
 
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
@@ -8,6 +8,7 @@ import sample.util.*;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 public class EventHandler {
@@ -42,48 +43,20 @@ public class EventHandler {
             KeyCode code = keyEvent.getCode();
 
             if (isPlayerInput(code)) {
-                PlayerMovedEvent move;
-                switch (code) {
-                    case W:
-                    case UP:
-                        move = new PlayerMovedEvent(Direction.UP);
-                        break;
-                    case A:
-                    case LEFT:
-                        move = new PlayerMovedEvent(Direction.LEFT);
-                        break;
-                    case S:
-                    case DOWN:
-                        move = new PlayerMovedEvent(Direction.DOWN);
-                        break;
-                    case D:
-                    case RIGHT:
-                        move = new PlayerMovedEvent(Direction.RIGHT);
-                        break;
-                    default:
-                        System.out.println("Unknown player move code");
-                        return;
-                }
-
-                gameContext.handle(move);
+                Optional.ofNullable(PlayerMoveEvent.startFromKey(code))
+                        .ifPresent(gameContext::handle);
             }
         });
         scene.setOnKeyReleased(keyEvent -> {
             KeyCode code = keyEvent.getCode();
 
+            if (isPlayerInput(code)) {
+                Optional.ofNullable(PlayerMoveEvent.stopFromKey(code))
+                        .ifPresent(gameContext::handle);
+            }
+
             if (isImmediateInput(code)) {
-                GameChangedEvent gameChange;
-                switch (code) {
-                    case ENTER:
-                    case SPACE:
-                        gameChange = new GameChangedEvent(GameChangeType.PAUSE);
-                        break;
-                    case ESCAPE:
-                    default:
-                        gameChange = new GameChangedEvent(GameChangeType.MENU);
-                        break;
-                }
-                gameContext.handle(gameChange);
+                gameContext.handle(GameChangedEvent.fromKey(code));
             }
         });
 

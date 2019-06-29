@@ -4,6 +4,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import sample.entities.Fire;
+import sample.entities.Message;
 import sample.entities.events.AddMessageEvent;
 import sample.entities.events.RemoveEntityEvent;
 import sample.entities.events.RemoveMessageEvent;
@@ -12,11 +13,17 @@ import sample.entities.Player;
 
 public class GameContext extends EntityCanvasContext {
     private Point gameStart = Point.of(0, 100);
+    private boolean menuOpen = false;
     private boolean paused = false;
+    private Message pauseMessage = null;
     private Point skyStart = Point.of(0, 0);
 
     public GameContext(Canvas canvas) {
         this(canvas, 0, 0);
+    }
+
+    public GameContext(Canvas canvas, double yOffset) {
+        this(canvas, 0, yOffset);
     }
 
     public GameContext(Canvas canvas, double xOffset, double yOffset) {
@@ -49,7 +56,15 @@ public class GameContext extends EntityCanvasContext {
         }
     }
 
+    public void handle(PlayerMoveEvent event) {
+        getPlayer().handle(event);
+    }
+
     public void handle(PlayerMovedEvent event) {
+        if (paused) {
+            return;
+        }
+
         Direction direction = event.getEvent().getBody();
         Player player = getPlayer();
         switch (direction) {
@@ -82,6 +97,10 @@ public class GameContext extends EntityCanvasContext {
         super.update(delta);
     }
 
+    private void closeMenu() {
+
+    }
+
     private void drawGame() {
         drawGameBackground();
         drawEntities();
@@ -103,7 +122,19 @@ public class GameContext extends EntityCanvasContext {
     private void drawSun(GraphicsContext gc) {
         gc.setFill(Color.YELLOW);
         gc.setStroke(Color.YELLOW);
-        gc.fillOval(-5, -5, 40, 40);
+        gc.fillOval(-5, -5, Constants.ENTITIES.SUN.WIDTH, Constants.ENTITIES.SUN.HEIGHT);
+    }
+
+    private void handleMenu() {
+        if (paused) {
+            return;
+        }
+
+        if (menuOpen) {
+            closeMenu();
+        } else {
+            openMenu();
+        }
     }
 
     private void handlePause() {
@@ -114,13 +145,19 @@ public class GameContext extends EntityCanvasContext {
         }
     }
 
+    private void openMenu() {
+
+    }
+
     private void pause() {
         paused = true;
-        // entityManager.add(new Message("PAUSED", Point.of(20, 50), Color.BLACK, null));
+        pauseMessage = new Message(Constants.TEXT.PAUSED, Point.of(20, 50), Color.BLACK, null);
+        add(pauseMessage);
     }
 
     private void unpause() {
         paused = false;
-        // entityManager.remove("PAUSED");
+        remove(pauseMessage);
+        pauseMessage = null;
     }
 }
