@@ -1,9 +1,10 @@
 package sample;
 
 import javafx.application.Application;
-import javafx.scene.canvas.Canvas;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.stage.Stage;
-import sample.contexts.ApplicationContext;
 import sample.contexts.GameContext;
 import sample.contexts.MenuContext;
 import sample.resources.ImageLoader;
@@ -14,21 +15,25 @@ import java.util.List;
 public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("Main.fxml"));
+        Parent root = loader.load();
+        MainController controller = loader.getController();
+        Scene scene = new Scene(root, Constants.CONTEXTS.GAME.WIDTH, Constants.CONTEXTS.GAME.HEIGHT);
+
+        ApplicationRunner runner = new ApplicationRunner(scene,
+                List.of(
+                        new MenuContext(controller.menu),
+                        new GameContext(
+                                controller.game,
+                                Constants.CONTEXTS.MENU.HEIGHT
+                        )
+                )
+        );
+        runner.start();
+
         primaryStage.setTitle(Constants.GAME.TITLE);
         primaryStage.getIcons().add(ImageLoader.getImage("SolemnManIcon"));
-
-        ApplicationRunner runner = new ApplicationRunner(List.of(
-                new MenuContext(
-                        new Canvas(Constants.CONTEXTS.MENU.WIDTH, Constants.CONTEXTS.MENU.HEIGHT)
-                ),
-                new GameContext(
-                        new Canvas(Constants.CONTEXTS.GAME.WIDTH, Constants.CONTEXTS.GAME.HEIGHT),
-                        Constants.CONTEXTS.MENU.HEIGHT
-                )
-        ));
-
-        runner.start();
-        primaryStage.setScene(runner.getScene());
+        primaryStage.setScene(scene);
         primaryStage.show();
     }
 

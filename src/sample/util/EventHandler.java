@@ -4,7 +4,6 @@ import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import sample.contexts.ApplicationContext;
 import sample.contexts.GameContext;
-import sample.util.*;
 
 import java.util.HashSet;
 import java.util.List;
@@ -60,7 +59,7 @@ public class EventHandler {
             }
         });
 
-        scene.setOnMouseClicked(event -> gameContext.handle(Point.of(event.getX(), event.getY())));
+        scene.setOnMouseClicked(event -> applicationContexts.forEach(ctx -> ctx.handle(Point.of(event.getX(), event.getY()))));
     }
 
     public boolean anyCurrentClicks() { return !currentClicks.isEmpty(); }

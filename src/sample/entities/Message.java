@@ -3,12 +3,11 @@ package sample.entities;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontSmoothingType;
 import javafx.scene.text.FontWeight;
-import sample.entities.interfaces.DrawableText;
+import sample.entities.interfaces.FillableStrokeableDrawableText;
 import sample.util.Point;
 
-public class Message implements DrawableText {
+public class Message implements FillableStrokeableDrawableText {
     private Point location;
     private String text;
     private Color fill = Color.RED;

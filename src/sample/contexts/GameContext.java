@@ -5,11 +5,11 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import sample.entities.Fire;
 import sample.entities.Message;
+import sample.entities.Player;
 import sample.entities.events.AddMessageEvent;
 import sample.entities.events.RemoveEntityEvent;
 import sample.entities.events.RemoveMessageEvent;
 import sample.util.*;
-import sample.entities.Player;
 
 public class GameContext extends EntityCanvasContext {
     private Point gameStart = Point.of(0, 100);
@@ -95,6 +95,11 @@ public class GameContext extends EntityCanvasContext {
         }
 
         super.update(delta);
+
+        Player player = getPlayer();
+        if (hasCollision(player)) {
+            player.revertLast();
+        }
     }
 
     private void closeMenu() {

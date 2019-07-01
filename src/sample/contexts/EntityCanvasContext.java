@@ -7,6 +7,8 @@ import sample.entities.Message;
 import sample.entities.Player;
 import sample.entities.interfaces.Clickable;
 import sample.entities.interfaces.Collideable;
+import sample.entities.interfaces.Drawable;
+import sample.util.DrawableManager;
 import sample.util.EntityManager;
 import sample.util.MessageManager;
 import sample.util.Point;
@@ -14,6 +16,7 @@ import sample.util.Point;
 import java.util.List;
 
 public abstract class EntityCanvasContext extends CanvasContext {
+    private DrawableManager drawableManager = new DrawableManager();
     private EntityManager entityManager = new EntityManager();
     private MessageManager messageManager = new MessageManager();
 
@@ -27,19 +30,29 @@ public abstract class EntityCanvasContext extends CanvasContext {
 
     @Override
     public void draw() {
-        GraphicsContext gc = getGraphicsContext();
-        getEntities().forEach(entity -> entity.draw(gc));
-        getMessages().forEach(message -> message.draw(gc));
+        drawDrawables();
+        drawEntities();
+        drawMessages();
     }
 
     @Override
     public void handle(Point point) {
-        Point transformed = point.plusX(getxOffset()).minusY(getyOffset());
+        System.out.println("Handling click at: " + point);
+        Point transformed = transform(point);
+        System.out.println("Transformed: " + transformed);
+        if (!intersects(transformed)) {
+            return;
+        }
+
         getEntities().stream()
                      .filter(entity -> entity.intersects(transformed))
                      .filter(Clickable.class::isInstance)
                      .map(Clickable.class::cast)
                      .forEach(clickable -> clickable.onClick(transformed));
+        getDrawables().stream()
+                .filter(Clickable.class::isInstance)
+                .map(Clickable.class::cast)
+                .forEach(clickable -> clickable.onClick(transformed));
     }
 
     public boolean hasCollision(Collideable collideable) {
@@ -55,6 +68,10 @@ public abstract class EntityCanvasContext extends CanvasContext {
                      .filter(Entity::canTick)
                      .forEach(entity -> entity.tick(delta));
         clearEntities();
+    }
+
+    protected <T extends Drawable> void add(T drawable) {
+        drawableManager.add(drawable);
     }
 
     protected <T extends Entity> void add(T entity) {
@@ -73,15 +90,33 @@ public abstract class EntityCanvasContext extends CanvasContext {
         messageManager.addAll(messages);
     }
 
+    protected void clearDrawables() {
+        drawableManager.clear();
+    }
+
     protected void clearEntities() {
         entityManager.clear();
     }
 
     protected void clearMessages() { messageManager.clear(); }
 
+    protected void drawDrawables() {
+        GraphicsContext gc = getGraphicsContext();
+        getDrawables().forEach(drawable -> drawable.draw(gc));
+    }
+
     protected void drawEntities() {
         GraphicsContext gc = getGraphicsContext();
         getEntities().forEach(entity -> entity.draw(gc));
+    }
+
+    protected void drawMessages() {
+        GraphicsContext gc = getGraphicsContext();
+        getMessages().forEach(message -> message.draw(gc));
+    }
+
+    protected List<Drawable> getDrawables() {
+        return drawableManager.getCurrent();
     }
 
     protected List<Entity> getEntities() {
@@ -96,6 +131,10 @@ public abstract class EntityCanvasContext extends CanvasContext {
 
     protected boolean hasPlayer() {
         return entityManager.hasPlayer();
+    }
+
+    protected <T extends Drawable> void remove(T drawable) {
+        drawableManager.remove(drawable);
     }
 
     protected <T extends Entity> void remove(T entity) {

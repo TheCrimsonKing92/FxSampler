@@ -1,11 +1,9 @@
 package sample.contexts;
 
 import javafx.scene.Node;
-import sample.util.EntityManager;
 import sample.util.Point;
 
 public abstract class ApplicationContext<T extends Node> {
-    private EntityManager entityManager = new EntityManager();
     private T node;
     private double xOffset = 0;
     private double yOffset = 0;

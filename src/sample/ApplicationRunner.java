@@ -1,17 +1,13 @@
 package sample;
 
 import javafx.animation.AnimationTimer;
-import javafx.collections.ObservableList;
-import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.layout.VBox;
 import sample.contexts.ApplicationContext;
 import sample.contexts.GameContext;
 import sample.util.EventHandler;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.time.LocalDateTime;
 import java.util.List;
 
 public class ApplicationRunner {
@@ -29,34 +25,12 @@ public class ApplicationRunner {
     private EventHandler eventHandler;
     private Scene scene;
 
-    public ApplicationRunner(List<ApplicationContext> applicationContexts) {
+    public ApplicationRunner(Scene scene, List<ApplicationContext> applicationContexts) {
         this.applicationContexts = applicationContexts;
-        this.scene = generateScene();
+        this.scene = scene;
+        this.eventHandler = new EventHandler(getGameContext(), getContexts());
+        this.eventHandler.addHandlers(scene);
     }
-
-    private Scene generateScene() {
-        VBox box = new VBox();
-        ObservableList<Node> children = box.getChildren();
-        getContexts().stream()
-                     .map(ApplicationContext::getNode)
-                     .map(Node.class::cast)
-                     .forEach(children::add);
-        Scene scene = new Scene(box);
-        eventHandler = new EventHandler(getGameContext(), getContexts());
-        eventHandler.addHandlers(scene);
-
-        return scene;
-    }
-
-    private GameContext getGameContext() {
-        return getContexts().stream()
-                            .filter(GameContext.class::isInstance)
-                            .map(GameContext.class::cast)
-                            .findFirst()
-                            .orElse(null);
-    }
-
-    public static double getUpdateDelta() { return updateDelta; }
 
     public Scene getScene() { return scene; }
 
@@ -72,6 +46,14 @@ public class ApplicationRunner {
 
     private List<ApplicationContext> getContexts() {
         return applicationContexts;
+    }
+
+    private GameContext getGameContext() {
+        return getContexts().stream()
+                .filter(GameContext.class::isInstance)
+                .map(GameContext.class::cast)
+                .findFirst()
+                .orElse(null);
     }
 
     private void renderContexts() {

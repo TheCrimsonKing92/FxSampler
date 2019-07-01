@@ -1,5 +1,5 @@
 package sample.entities.interfaces;
 
-public interface DrawableText extends Drawable, Fillable, Strokeable {
-    String getText();
+public interface DrawableText extends Drawable {
+    String getValue();
 }

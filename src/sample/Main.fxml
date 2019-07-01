@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.VBox?>
+<?import sample.components.Game?>
+<?import sample.components.Menu?>
+<VBox xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="sample.MainController">
+    <Menu fx:id="menu"/>
+    <Game fx:id="game"/>
+</VBox>

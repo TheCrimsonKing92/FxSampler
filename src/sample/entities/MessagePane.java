@@ -12,7 +12,8 @@ import sample.util.Constants;
 import sample.util.Point;
 
 public class MessagePane extends Message implements Clickable {
-    private int borderOffset = 10;
+    private int xOffset = 10;
+    private int yOffset = 10;
     private boolean drawButton = false;
     private EventTarget eventTarget;
 
@@ -27,15 +28,20 @@ public class MessagePane extends Message implements Clickable {
         this.drawButton = drawButton;
     }
 
-    public MessagePane(EventTarget eventTarget, String text, Point point, Font font, int offset) {
+    public MessagePane(EventTarget eventTarget, String text, Point point, Font font, int yOffset) {
         super(text, point, font);
         this.eventTarget = eventTarget;
-        borderOffset = offset;
+        this.yOffset = yOffset;
     }
 
-    public MessagePane(EventTarget eventTarget, String text, Point point, Font font, boolean drawButton, int offset) {
+    public MessagePane(EventTarget eventTarget, String text, Point point, Font font, boolean drawButton, int yOffset) {
         this(eventTarget, text, point, font, drawButton);
-        borderOffset = offset;
+        this.yOffset = yOffset;
+    }
+
+    public MessagePane(EventTarget eventTarget, String text, Point point, Font font, boolean drawButton, int yOffset, int xOffset) {
+        this(eventTarget, text, point, font, drawButton, yOffset);
+        this.xOffset = xOffset;
     }
 
     @Override
@@ -96,14 +102,14 @@ public class MessagePane extends Message implements Clickable {
     private Point getBorderStart() {
         Pair<Double, Double> dimensions = getDimensions();
         Point location = getLocation();
-        return Point.of(location.getX(), location.minusY(dimensions.getKey()).plusY(borderOffset).getY());
+        return Point.of(location.minusX(xOffset).getX(), location.minusY(dimensions.getKey()).plusY(yOffset).getY());
     }
 
     private Point getButtonStart() {
         Pair<Double, Double> dimensions = getDimensions();
         return getBorderStart().plusX(dimensions.getValue())
                                .minusX(Constants.BUTTON.WIDTH)
-                               .plusY(Constants.BUTTON.HEIGHT).plusY(borderOffset)
+                .plusY(Constants.BUTTON.HEIGHT).plusY(yOffset)
                                .minusY(dimensions.getKey());
     }
 
@@ -113,6 +119,6 @@ public class MessagePane extends Message implements Clickable {
         Text measurer = new Text(getText());
         measurer.setFont(getFont());
         Bounds bounds = measurer.getLayoutBounds();
-        return new Pair<>(bounds.getHeight(), bounds.getWidth());
+        return new Pair<>(bounds.getHeight() * 1.1, bounds.getWidth() * 1.1);
     }
 }

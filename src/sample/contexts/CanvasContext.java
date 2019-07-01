@@ -3,6 +3,7 @@ package sample.contexts;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import sample.util.Point;
 
 public abstract class CanvasContext extends ApplicationContext<Canvas> {
     private GraphicsContext graphicsContext;
@@ -40,15 +41,33 @@ public abstract class CanvasContext extends ApplicationContext<Canvas> {
 
     public abstract void draw();
 
+    protected boolean intersects(Point point) {
+        Point location = Point.of(getxOffset(), getyOffset());
+        return location.getX() < point.getX() &&
+                location.getY() < point.getY() &&
+                (location.getX() + getWidth()) > point.getX() &&
+                (location.getY() + getHeight()) > point.getY();
+    }
+
     @Override
     public final void render() {
         clear();
         draw();
     }
 
-    protected GraphicsContext getGraphicsContext() { return graphicsContext; }
+    protected Point transform(Point point) {
+        return point.plusX(getxOffset()).minusY(getyOffset());
+    }
 
-    protected double getHeight() { return height; }
+    protected GraphicsContext getGraphicsContext() {
+        return graphicsContext;
+    }
 
-    protected double getWidth() { return width; }
+    protected double getHeight() {
+        return height;
+    }
+
+    protected double getWidth() {
+        return width;
+    }
 }

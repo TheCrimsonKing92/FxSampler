@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.canvas.Canvas?>
+<fx:root
+        type="javafx.scene.canvas.Canvas"
+        xmlns="http://javafx.com/fxml"
+        xmlns:fx="http://javafx.com/fxml"
+        fx:id="menu"
+        height="90"
+        width="800">
+</fx:root>
